@@ -1,4 +1,4 @@
 MProgress.js
 ============
 
-Google m
+Google Material Design Progress bar
