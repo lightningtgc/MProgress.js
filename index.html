@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>MProgress</title>
+  <link href='mprogress.css' rel='stylesheet' />
+  <meta name="viewport" content="width=device-width">
+</head>
+
+<body style='display: none'>
+  <header class='page-header'>
+    <span class='mprogress-logo fade out'></span>
+    <h1>MProgress<i>.js</i></h1>
+  </header>
+
+  <div class='contents fade out'>
+    <div class='controls'>
+      <p>
+        <button class='button play' id='b-0'></button>
+        <i>MProgress</i><b>.start()</b>
+        &mdash;
+        shows the progress bar
+      </p>
+      <p>
+        <button class='button play' id='b-40'></button>
+        <i>MProgress</i><b>.set(0.4)</b>
+        &mdash;
+        sets a percentage
+      </p>
+      <p>
+        <button class='button play' id='b-inc'></button>
+        <i>MProgress</i><b>.inc()</b>
+        &mdash;
+        increments by a little
+      </p>
+      <p>
+        <button class='button play' id='b-100'></button>
+        <i>MProgress</i><b>.done()</b>
+        &mdash;
+        completes the progress
+      </p>
+    </div>
+   
+  </div>
+
+  <script src='libs/zepto.js'></script>
+  <script src='mprogress.js'></script>
+  <script>
+    $('body').show();
+    $('.version').text(MProgress.version);
+    MProgress.start();
+    setTimeout(function() { MProgress.done(); $('.fade').removeClass('out'); }, 1000);
+
+    $("#b-0").click(function() { MProgress.start(); });
+    $("#b-40").click(function() { MProgress.set(0.4); });
+    $("#b-inc").click(function() { MProgress.inc(); });
+    $("#b-100").click(function() { MProgress.done(); });
+  </script>
+
+</body>
+</html>
