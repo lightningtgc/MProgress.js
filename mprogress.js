@@ -26,8 +26,14 @@
         trickleSpeed: 800,
         barSelector: '[role="bar"]',
         parent: 'body',
-        templateDeterminate: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
-        template: '<div class="indeter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>'
+        type: 2
+    };
+
+    var renderTemplate = {
+        determinate: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
+        indeterminate: '<div class="indeter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
+        buffer: '',
+        query: ''
     };
 
     /**
@@ -218,26 +224,29 @@
     MProgress.render = function(fromStart) {
         if (MProgress.isRendered()) return document.getElementById('mprogress');
 
-        addClass(document.documentElement, 'mprogress-busy');
+        var progress = document.createElement('div'),
+            currTpl  = MProgress.getCurrTemplate() || '',
+            bar,
+            perc,
+            MParent;
 
-        var progress = document.createElement('div');
         progress.id = 'mprogress';
-        progress.innerHTML = Settings.template;
+        progress.innerHTML = currTpl;
 
-        var bar      = progress.querySelector(Settings.barSelector),
-        perc     = fromStart ? '-100' : toBarPerc(MProgress.status || 0),
-        parent   = document.querySelector(Settings.parent);
+        bar      = progress.querySelector(Settings.barSelector);
+        perc     = fromStart ? '-100' : toBarPerc(MProgress.status || 0);
+        MParent  = document.querySelector(Settings.parent);
 
         css(bar, {
             transition: 'all 0 linear',
             transform: 'translate3d(' + perc + '%,0,0)'
         });
 
-        if (parent != document.body) {
-            addClass(parent, 'mprogress-custom-parent');
+        if (MParent != document.body) {
+            addClass(MParent, 'mprogress-custom-parent');
         }
 
-        parent.appendChild(progress);
+        MParent.appendChild(progress);
         return progress;
     };
 
@@ -246,9 +255,13 @@
      */
 
     MProgress.remove = function() {
-        removeClass(document.documentElement, 'mprogress-busy');
-        removeClass(document.querySelector(Settings.parent), 'mprogress-custom-parent')
-        var progress = document.getElementById('mprogress');
+        var progress = document.getElementById('mprogress'),
+            MParent   = document.querySelector(Settings.parent);
+
+        if (MParent != document.body) {
+            removeClass(MParent, 'mprogress-custom-parent');
+        }
+
         progress && removeElement(progress);
     };
 
@@ -260,6 +273,23 @@
         return !!document.getElementById('mprogress');
     };
 
+    MProgress.getCurrTemplate = function() {
+        var tplType = Settings.type || 1,
+            tplNameArr = ['determinate', 'indeterminate', 'buffer', 'query'],
+            tplKey;
+
+        if (typeof tplType === 'number') {
+            tplKey = tplNameArr[tplType - 1];
+
+            return renderTemplate[tplKey] || '';
+        }
+
+        if (typeof tplType === 'string') {
+            return renderTemplate[tplType] || '';
+        }
+
+    };
+    
     /**
      * Determine which positioning CSS rule to use.
      */
