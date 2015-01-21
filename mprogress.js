@@ -26,13 +26,13 @@
         trickleSpeed: 800,
         barSelector: '[role="bar"]',
         parent: 'body',
-        type: 2
+        template: 2
     };
 
     var renderTemplate = {
         determinate: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
         indeterminate: '<div class="indeter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
-        buffer: '',
+        buffer: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
         query: ''
     };
 
@@ -274,20 +274,18 @@
     };
 
     MProgress.getCurrTemplate = function() {
-        var tplType = Settings.type || 1,
+        var tplType = Settings.template || 1,
             tplNameArr = ['determinate', 'indeterminate', 'buffer', 'query'],
             tplKey;
 
-        if (typeof tplType === 'number') {
+        if (typeof ~~tplType === 'number') {
             tplKey = tplNameArr[tplType - 1];
-
             return renderTemplate[tplKey] || '';
         }
 
         if (typeof tplType === 'string') {
-            return renderTemplate[tplType] || '';
+            return template;
         }
-
     };
     
     /**
