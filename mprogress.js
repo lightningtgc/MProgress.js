@@ -25,14 +25,15 @@
         trickleRate: 0.02,
         trickleSpeed: 800,
         barSelector: '[role="bar"]',
+        dashedSelector: '[role="dashed"]',
         parent: 'body',
-        template: 2
+        template: 3
     };
 
     var renderTemplate = {
         determinate: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
         indeterminate: '<div class="indeter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
-        buffer: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
+        buffer: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="buffer-bg"></div><div class="mp-ui-dashed" role="dashed"></div>',
         query: ''
     };
 
@@ -59,26 +60,23 @@
 
     MProgress.status = null;
 
+
     /**
-     * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+     * setProgress
      *
-     *     MProgress.set(0.4);
-     *     MProgress.set(1.0);
+     * @param barSelector
+     * @return {undefined}
      */
 
-    MProgress.set = function(n) {
-        var started = MProgress.isStarted();
+    MProgress.setProgress = function(barSelector, n){
+        var started  = MProgress.isStarted(),
+            progress = MProgress.render(!started),
+            bar      = progress.querySelector(barSelector),
+            speed    = Settings.speed,
+            ease     = Settings.easing;
 
-        n = clamp(n, Settings.minimum, 1);
-        MProgress.status = (n === 1 ? null : n);
-
-        var progress = MProgress.render(!started),
-        bar      = progress.querySelector(Settings.barSelector),
-        speed    = Settings.speed,
-        ease     = Settings.easing;
-
-        progress.offsetWidth; /* Repaint */
-
+        progress.offsetWidth; /* Repaint */ 
+        
         queue(function(next) {
             // Set positionUsing if it hasn't already been set
             if (Settings.positionUsing === '') Settings.positionUsing = MProgress.getPositioningCSS();
@@ -109,6 +107,22 @@
             }
         });
 
+
+    }
+
+    /**
+     * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+     *
+     *     MProgress.set(0.4);
+     *     MProgress.set(1.0);
+     */
+
+    MProgress.set = function(n) {
+        n = clamp(n, Settings.minimum, 1);
+        MProgress.status = (n === 1 ? null : n);
+        
+        MProgress.setProgress(Settings.barSelector, n);
+       
         return this;
     };
 
@@ -125,6 +139,19 @@
      */
     MProgress.start = function() {
         if (!MProgress.status) MProgress.set(0);
+
+        // buffer show front dashed scroll
+        if (~~Settings.template === 3) {
+            var started  = MProgress.isStarted(),
+                progress = MProgress.render(!started),
+                dashed   = progress.querySelector(Settings.dashedSelector);
+            addClass(dashed, 'active');
+            setTimeout(function(){
+                hideEl(dashed);
+                removeClass(dashed, 'active');
+                showEl(dashed);
+            }, 3000);
+        }
 
         var work = function() {
             setTimeout(function() {
@@ -474,6 +501,29 @@
         element.className = newList.substring(1, newList.length - 1);
     }
 
+    /**
+     * show element
+     * like $('*').show();
+     * @param element
+     * @return {undefined}
+     */
+    function showEl(element) {
+        css(element, {
+            display: 'block'
+        });
+    }
+
+    /**
+     * hide element
+     * like $('*').hide();
+     * @param element
+     * @return {undefined}
+     */
+    function hideEl(element) {
+        css(element, {
+            display: 'none'
+        });
+    }
     /**
      * (Internal) Gets a space separated list of the class names on the element. 
      * The list is wrapped with a single space on each end to facilitate finding 
