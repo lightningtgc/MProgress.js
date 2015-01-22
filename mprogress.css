@@ -30,10 +30,6 @@
 
 }
 
-#mprogress .buffer-bg {
-
-    width: 50%;
-}
 #mprogress .mp-ui-dashed {
     z-index: 1030;
     background-color:transparent;

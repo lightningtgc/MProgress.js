@@ -25,15 +25,20 @@
         trickleRate: 0.02,
         trickleSpeed: 800,
         barSelector: '[role="bar"]',
+        bufferSelector: '[role="bufferBar"]',
         dashedSelector: '[role="dashed"]',
         parent: 'body',
         template: 3
     };
 
     var renderTemplate = {
-        determinate: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
-        indeterminate: '<div class="indeter-bar" role="bar"><div class="peg"></div></div><div class="bar-bg"></div>',
-        buffer: '<div class="deter-bar" role="bar"><div class="peg"></div></div><div class="buffer-bg"></div><div class="mp-ui-dashed" role="dashed"></div>',
+        determinate: '<div class="deter-bar" role="bar"><div class="peg"></div></div>' +
+                     '<div class="bar-bg"></div>',
+        indeterminate: '<div class="indeter-bar" role="bar"><div class="peg"></div></div>' + 
+                       '<div class="bar-bg"></div>',
+        buffer: '<div class="deter-bar" role="bar"><div class="peg"></div></div>' +
+                '<div class="buffer-bg" role="bufferBar"></div>' +
+                '<div class="mp-ui-dashed" role="dashed"></div>',
         query: ''
     };
 
@@ -59,16 +64,17 @@
      */
 
     MProgress.status = null;
+    MProgress.bufferStatus = null;
 
 
     /**
-     * setProgress
+     * _setProgress
      *
      * @param barSelector
      * @return {undefined}
      */
 
-    MProgress.setProgress = function(barSelector, n){
+    MProgress._setProgress = function(barSelector, n){
         var started  = MProgress.isStarted(),
             progress = MProgress.render(!started),
             bar      = progress.querySelector(barSelector),
@@ -121,7 +127,22 @@
         n = clamp(n, Settings.minimum, 1);
         MProgress.status = (n === 1 ? null : n);
         
-        MProgress.setProgress(Settings.barSelector, n);
+        MProgress._setProgress(Settings.barSelector, n);
+       
+        return this;
+    };
+
+    /**
+     * setBuffer
+     *
+     * @param n
+     * @return {undefined}
+     */
+    MProgress.setBuffer = function(n) {
+        n = clamp(n, Settings.minimum, 1);
+        MProgress.bufferStatus = (n === 1 ? null : n);
+        
+        MProgress._setProgress(Settings.bufferSelector, n);
        
         return this;
     };
@@ -141,7 +162,8 @@
         if (!MProgress.status) MProgress.set(0);
 
         // buffer show front dashed scroll
-        if (~~Settings.template === 3) {
+        if ( MProgress.isBufferStyle() ) {
+            if (!MProgress.bufferStatus) MProgress.setBuffer(0);
             var started  = MProgress.isStarted(),
                 progress = MProgress.render(!started),
                 dashed   = progress.querySelector(Settings.dashedSelector);
@@ -185,20 +207,37 @@
     };
 
     /**
+     * _getRandomNum
+     *
+     * @param n
+     * @return {undefined}
+     */
+    MProgress._getRandomNum = function(n, amount) {
+        if (typeof amount !== 'number') {
+            amount = (1 - n) * clamp(Math.random() * n, 0.1, 0.95);
+        }
+
+        n = clamp(n + amount, 0, 0.994); 
+
+        return n;
+    };
+
+    /**
      * Increments by a random amount.
      */
 
     MProgress.inc = function(amount) {
-        var n = MProgress.status;
+        var n = MProgress.status,
+            bn = MProgress.bufferStatus;
 
         if (!n) {
             return MProgress.start();
         } else {
-            if (typeof amount !== 'number') {
-                amount = (1 - n) * clamp(Math.random() * n, 0.1, 0.95);
+            n = MProgress._getRandomNum(n, amount);
+            if ( MProgress.isBufferStyle()) {
+                bn = MProgress._getRandomNum( n + 0.1, amount);
+                MProgress.setBuffer(bn);
             }
-
-            n = clamp(n + amount, 0, 0.994);
             return MProgress.set(n);
         }
     };
@@ -252,7 +291,7 @@
         if (MProgress.isRendered()) return document.getElementById('mprogress');
 
         var progress = document.createElement('div'),
-            currTpl  = MProgress.getCurrTemplate() || '',
+            currTpl  = MProgress._getCurrTemplate() || '',
             bar,
             perc,
             MParent;
@@ -268,6 +307,15 @@
             transition: 'all 0 linear',
             transform: 'translate3d(' + perc + '%,0,0)'
         });
+
+        if ( MProgress.isBufferStyle() ) {
+            var buffer  = progress.querySelector(Settings.bufferSelector),
+                bufferPerc = fromStart ? '-100' : toBarPerc(MProgress.bufferStatus || 0);
+            css(buffer, {
+                transition: 'all 0 linear',
+                transform: 'translate3d(' + bufferPerc + '%,0,0)'
+            });
+        }
 
         if (MParent != document.body) {
             addClass(MParent, 'mprogress-custom-parent');
@@ -300,7 +348,16 @@
         return !!document.getElementById('mprogress');
     };
 
-    MProgress.getCurrTemplate = function() {
+    MProgress.isBufferStyle = function() {
+        return ~~Settings.template === 3;
+    };
+
+    /**
+     * _getCurrTemplate
+     *
+     * @return {undefined}
+     */
+    MProgress._getCurrTemplate = function() {
         var tplType = Settings.template || 1,
             tplNameArr = ['determinate', 'indeterminate', 'buffer', 'query'],
             tplKey;
