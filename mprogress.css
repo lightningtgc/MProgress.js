@@ -4,7 +4,8 @@
 }
 
 #mprogress .deter-bar,
-#mprogress .indeter-bar {
+#mprogress .indeter-bar,
+#mprogress .query-bar {
   position: fixed;
   z-index: 1032;
   top: 0;
@@ -49,9 +50,11 @@
     -webkit-animation: buffer 3s infinite linear;
 
 }
+
 #mprogress .active.mp-ui-dashed:before {
     -webkit-animation: bufferGo 12s infinite linear;
 }
+
 /* Fancy blur effect */
 #mprogress .peg {
   display: block;
@@ -67,6 +70,7 @@
       -ms-transform: rotate(3deg) translate(0px, -4px);
           transform: rotate(3deg) translate(0px, -4px);
 }
+
 .mprogress-custom-parent {
   overflow: hidden;
   position: relative;
@@ -76,11 +80,203 @@
   position: absolute;
 }
 
-#mprogress .indeter-bar {
-    -webkit-animation: indeterminate1 5s infinite linear;
-            animation: indeterminate1 5s infinite linear;
+#mprogress .query-bar {
+    -webkit-animation: querying 5s infinite linear;
+            animation: querying 5s infinite linear;
 }
-@-webkit-keyframes indeterminate1 {
+#mprogress .query-bar.done {
+    -webkit-animation: endquery 4s linear;
+            animation: endquery 4s linear;  
+}
+@-webkit-keyframes endquery {
+/* one */
+  0% {
+    -webkit-transform: translateX(100%) scaleX(0.8);
+            transform: translateX(100%) scaleX(0.8); }
+
+  12% {
+    -webkit-transform: translateX(40%) scaleX(0.8);
+            transform: translateX(40%) scaleX(0.8); }
+
+  22% {
+    -webkit-transform: translateX(-100%);
+            transform: translateX(-100%); }
+
+  22.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* two */
+  23% {
+    -webkit-transform: translateX(100%) scaleX(0.5);
+            transform: translateX(100%) scaleX(0.5); }
+
+  40% {
+    -webkit-transform: translateX(-100%) scaleX(0.5);
+            transform: translateX(-100%) scaleX(0.5); }
+  40.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* three */
+  41% {
+    -webkit-transform: translateX(-100%) scaleX(1);
+            transform: translateX(-100%) scaleX(1); }
+
+  100% {
+    -webkit-transform: translateX(0%);
+            transform: translateX(0%); }
+}
+
+@-webkit-keyframes querying {
+/* one */
+  0% {
+    -webkit-transform: translateX(100%) scaleX(0.8);
+            transform: translateX(100%) scaleX(0.8); }
+
+  12% {
+    -webkit-transform: translateX(40%) scaleX(0.8);
+            transform: translateX(40%) scaleX(0.8); }
+
+  22% {
+    -webkit-transform: translateX(-100%);
+            transform: translateX(-100%); }
+
+  22.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* two */
+  23% {
+    -webkit-transform: translateX(100%) scaleX(0.5);
+            transform: translateX(100%) scaleX(0.5); }
+
+  40% {
+    -webkit-transform: translateX(-100%) scaleX(0.5);
+            transform: translateX(-100%) scaleX(0.5); }
+  40.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* three */
+  41% {
+    -webkit-transform: translateX(100%) scaleX(0.7);
+            transform: translateX(100%) scaleX(0.7); }
+
+  50% {
+    -webkit-transform: translateX(40%) scaleX(0.7);
+            transform: translateX(40%) scaleX(0.7); }
+
+  59% {
+    -webkit-transform: translateX(-100%) scaleX(0.7);
+            transform: translateX(-100%) scaleX(0.7); }
+
+  59.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* four */
+  60% {
+    -webkit-transform: translateX(100%) scaleX(0.4);
+            transform: translateX(100%) scaleX(0.4); }
+     
+
+  76% {
+    -webkit-transform: translateX(-100%) scaleX(0.4);
+            transform: translateX(-100%) scaleX(0.4); }
+  
+  76.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* five */
+  77% {
+    -webkit-transform: translateX(100%) scaleX(0.6);
+            transform: translateX(100%) scaleX(0.6); }
+
+  88% {
+    -webkit-transform: translateX(40%) scaleX(0.6);
+            transform: translateX(40%) scaleX(0.6); }
+  99% {
+    -webkit-transform: translateX(-100%) scaleX(0.6);
+            transform: translateX(-100%) scaleX(0.6); }
+
+  100% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); } }
+
+@keyframes querying {
+/* one */
+  0% {
+    -webkit-transform: translateX(100%) scaleX(0.8);
+            transform: translateX(100%) scaleX(0.8); }
+
+  12% {
+    -webkit-transform: translateX(40%) scaleX(0.8);
+            transform: translateX(40%) scaleX(0.8); }
+
+  22% {
+    -webkit-transform: translateX(-100%);
+            transform: translateX(-100%); }
+
+  22.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* two */
+  23% {
+    -webkit-transform: translateX(100%) scaleX(0.5);
+            transform: translateX(100%) scaleX(0.5); }
+
+  40% {
+    -webkit-transform: translateX(-100%) scaleX(0.5);
+            transform: translateX(-100%) scaleX(0.5); }
+  40.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* three */
+  41% {
+    -webkit-transform: translateX(100%) scaleX(0.7);
+            transform: translateX(100%) scaleX(0.7); }
+
+  50% {
+    -webkit-transform: translateX(40%) scaleX(0.7);
+            transform: translateX(40%) scaleX(0.7); }
+
+  59% {
+    -webkit-transform: translateX(-100%) scaleX(0.7);
+            transform: translateX(-100%) scaleX(0.7); }
+
+  59.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* four */
+  60% {
+    -webkit-transform: translateX(100%) scaleX(0.4);
+            transform: translateX(100%) scaleX(0.4); }
+     
+
+  76% {
+    -webkit-transform: translateX(-100%) scaleX(0.4);
+            transform: translateX(-100%) scaleX(0.4); }
+  
+  76.99% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); }
+/* five */
+  77% {
+    -webkit-transform: translateX(100%) scaleX(0.6);
+            transform: translateX(100%) scaleX(0.6); }
+
+  88% {
+    -webkit-transform: translateX(40%) scaleX(0.6);
+            transform: translateX(40%) scaleX(0.6); }
+  99% {
+    -webkit-transform: translateX(-100%) scaleX(0.6);
+            transform: translateX(-100%) scaleX(0.6); }
+
+  100% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0); } }
+
+#mprogress .indeter-bar {
+    -webkit-animation: indeterminate 5s infinite linear;
+            animation: indeterminate 5s infinite linear;
+}
+@-webkit-keyframes indeterminate {
 /* one */
   0% {
     -webkit-transform: translateX(-100%) scaleX(0.8);
@@ -153,7 +349,7 @@
     -webkit-transform: scaleX(0);
             transform: scaleX(0); } }
 
-@keyframes indeterminate1 {
+@keyframes indeterminate {
 /* one */
   0% {
     -webkit-transform: translateX(-100%) scaleX(0.8);

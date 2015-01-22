@@ -28,7 +28,7 @@
         bufferSelector: '[role="bufferBar"]',
         dashedSelector: '[role="dashed"]',
         parent: 'body',
-        template: 3
+        template: 4
     };
 
     var renderTemplate = {
@@ -39,7 +39,8 @@
         buffer: '<div class="deter-bar" role="bar"><div class="peg"></div></div>' +
                 '<div class="buffer-bg" role="bufferBar"></div>' +
                 '<div class="mp-ui-dashed" role="dashed"></div>',
-        query: ''
+        query: '<div class="query-bar" role="bar"><div class="peg"></div></div>' + 
+                '<div class="bar-bg"></div>'
     };
 
     /**
@@ -350,6 +351,10 @@
 
     MProgress.isBufferStyle = function() {
         return ~~Settings.template === 3;
+    };
+
+    MProgress.isQueryStyle = function() {
+        return ~~Settings.template === 4;
     };
 
     /**
