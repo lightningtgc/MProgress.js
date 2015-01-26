@@ -27,7 +27,7 @@
         bufferSelector: '[role="bufferBar"]',
         dashedSelector: '[role="dashed"]',
         parent: 'body',
-        template: 2
+        template: 1
     };
 
     var UN_TPL_ID = '99';
@@ -56,22 +56,17 @@
                         '<div class="bar-bg"></div>'
     };
 
+    var cacheStore = {};
+
     var Mprogress = function(opt) {
         var options = Utils.extend(opt, SETTINGS);
-        var tplType = ~~options.template;
-        var idName = 'mprogress';
-        var data;
-        if (typeof tplType === 'number') {
-            idName += tplType;
-        } else {
-            idName += '0';
-        }
+        var idName = 'mprogress' + ~~options.template;
+        var data = cacheStore[idName] || '';
 
-        if(!document.getElementById(idName)){
+        if(!data){
             data = new MProgress(options);
-        } else {
-            data = document.getElementById(idName);
-        }
+            cacheStore[idName] = data;
+        } 
 
         return data;
     };
@@ -90,30 +85,6 @@
         constructor: MProgress,
 
         /**
-         * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
-         *
-         *     MProgress.set(0.4);
-         *     MProgress.set(1.0);
-         */
-        set: function(n) {
-            n = Utils.clamp(n, this.options.minimum, 1);
-            this.status = (n === 1 ? null : n);
-
-            this._setProgress(this._getCurrSelector(), n);
-
-            return this;
-        },
-
-        setBuffer: function(n) {
-            n = Utils.clamp(n, this.options.minimum, 1);
-            this.bufferStatus = (n === 1 ? null : n);
-
-            this._setProgress(this.options.bufferSelector, n);
-
-            return this;
-        },
-
-        /**
          * Shows the progress bar.
          * This is the same as setting the status to 0%, except that it doesn't go backwards.
          *
@@ -122,6 +93,16 @@
          */
         start: function() {
             if (!this.status) this.set(0);
+
+
+            /**
+             * indeterminate and query just has 'start' and 'done' method 
+             */
+
+            if (this._isIndeterminateStyle() || this._isQueryStyle()) {
+                return this;
+            }
+            
 
             var self = this;
             // buffer show front dashed scroll
@@ -147,6 +128,30 @@
             };
 
             if (this.options.trickle) work();
+
+            return this;
+        },
+
+        /**
+         * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+         *
+         *     MProgress.set(0.4);
+         *     MProgress.set(1.0);
+         */
+        set: function(n) {
+            n = Utils.clamp(n, this.options.minimum, 1);
+            this.status = (n === 1 ? null : n);
+
+            this._setProgress(this._getCurrSelector(), n);
+
+            return this;
+        },
+
+        setBuffer: function(n) {
+            n = Utils.clamp(n, this.options.minimum, 1);
+            this.bufferStatus = (n === 1 ? null : n);
+
+            this._setProgress(this.options.bufferSelector, n);
 
             return this;
         },
@@ -256,14 +261,22 @@
          *
          */
         _setProgress: function(barSelector, n){
-            var started  = this._isStarted(),
-            progress = this.render(!started),
-            bar      = progress.querySelector(barSelector),
-            speed    = this.options.speed,
-            ease     = this.options.easing,
-            self     = this;
+            var started  = this._isStarted();
+            var progress = this.render(!started);
+            var bar      = progress.querySelector(barSelector);
+            var speed    = this.options.speed;
+            var ease     = this.options.easing;
+            var self     = this;
 
             progress.offsetWidth; /* Repaint */ 
+
+            /**
+             * indeterminate and query just has 'start' and 'done' method 
+             */
+
+            if (this._isIndeterminateStyle() || this._isQueryStyle()) {
+                return this;
+            }
 
             Utils.queue(function(next) {
                 // Set positionUsing if it hasn't already been set
@@ -340,6 +353,10 @@
             } else {
                 return idName;
             }
+        },
+
+        _isIndeterminateStyle: function() {
+            return this._getCurrTplId() === 2;
         },
 
         _isBufferStyle: function() {
@@ -427,6 +444,7 @@
      */
     var Utils = {
         extend: function(newObj, targetObj) {
+            targetObj = JSON.parse(JSON.stringify(targetObj));
             var key, value;
             for (var key in newObj) {
                 value = newObj[key];
