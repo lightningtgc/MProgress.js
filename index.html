@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
+  <title>Mprogress</title>
   <meta charset='utf-8'>
-  <title>MProgress</title>
-  <link href='mprogress.css' rel='stylesheet' />
-  <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" type="text/css" href='mprogress.css' />
   <style type="text/css">
-      .controls .button {
-        width: 50px;
-        height: 20px;
+      .demo-button {
+          width: 50px;
+          line-height: 25px;
+          height: 25px;
+          display: inline-block;
+          background: #FFA500;
+          text-align: center;
+          color: #FFF;
+          font-size: 17px;
+          border-radius: 6px;
+          margin-right: 20px;
+      }
+      .demo-bar {
+          margin: 10px 0;
+          width:100%;
+          height:5px;
       }
   </style>
 </head>
@@ -16,52 +30,115 @@
 <body style='display: none'>
   <header class='page-header'>
     <span class='mprogress-logo fade out'></span>
-    <h1>MProgress<i>.js</i></h1>
+    <h1>Material Progress</h1>
   </header>
 
   <div class='contents fade out'>
-    <div class='controls'>
+    <div class='demo-block'>
+        <h3>Type1: Determinate</h3>
+        <span class='demo-button' id='demoDeStart'>start</span>
+        <span class='demo-button' id='demoDeEnd'>end</span>
+        <span class='demo-button' id='demoDeSet'>set</span>
+        <span class='demo-button' id='demoDeInc'>inc</span>
       <p>
-        <button class='button play' id='b-0'></button>
-        <i>MProgress</i><b>.start()</b>
-        &mdash;
-        shows the progress bar
+        <i>new Mprogress.set(0.4)</i> &mdash;
+         sets a percentage
       </p>
       <p>
-        <button class='button play' id='b-40'></button>
-        <i>MProgress</i><b>.set(0.4)</b>
-        &mdash;
-        sets a percentage
-      </p>
-      <p>
-        <button class='button play' id='b-inc'></button>
-        <i>MProgress</i><b>.inc()</b>
-        &mdash;
-        increments by a little
-      </p>
-      <p>
-        <button class='button play' id='b-100'></button>
-        <i>MProgress</i><b>.done()</b>
-        &mdash;
-        completes the progress
+        <i>new Mprogress.inc()</i> &mdash;
+        increase by a little
       </p>
     </div>
-   
+
+    <div class="demo-block">
+        <h3>Type2: Indeterminate</h3>
+        <span class="demo-button" id="demoInStart"> start </span>
+        <span class="demo-button" id="demoInEnd"> end </span>
+        <div id="demoIn" class="demo-bar"></div>
+    </div>
+    <div class="demo-block">
+        <h3>Type3: Buffer</h3>
+        <span class="demo-button" id="demoBufferStart"> start </span>
+        <span class="demo-button" id="demoBufferEnd"> end </span>
+        <div id="demoBuffer" class="demo-bar"></div>
+    </div>
+    <div class="demo-block">
+        <h3>Type4: Query Indeterminate and Determinate</h3>
+        <span class="demo-button" id="demoQueryStart"> start </span>
+        <span class="demo-button" id="demoQueryEnd"> end </span>
+        <div id="demoQuery" class="demo-bar"></div>
+    </div>
+
   </div>
 
   <script src='libs/zepto.js'></script>
   <script src='mprogress.js'></script>
   <script>
+    var mp,mp2,mp3,mp4;
+
     $('body').show();
-    $('.version').text(MProgress.version);
-    MProgress.start();
-    //setTimeout(function() { MProgress.done(); $('.fade').removeClass('out'); }, 1000);
+    $('.version').text(Mprogress.version);
+    //var newMp = new Mprogress('start');
+    var mp = new Mprogress();
 
-    $("#b-0").click(function() { MProgress.start(); });
-    $("#b-40").click(function() { MProgress.set(0.4); });
-    $("#b-inc").click(function() { MProgress.inc(); });
-    $("#b-100").click(function() { MProgress.done(); });
-  </script>
+    //setTimeout(function() { Mprogress.done(); $('.fade').removeClass('out'); }, 1000);
 
+    function bindEvent(){
+
+        $("#demoDeStart").click(function() { 
+            mp.start();
+        });
+        $("#demoDeSet").click(function() {
+            mp.set(0.4);
+        });
+        $("#demoDeInc").click(function() { 
+            mp.inc(); 
+        });
+        $("#demoDeEnd").click(function() {
+            mp.end(); 
+        });
+
+        // mp2 
+        $("#demoInStart").click(function() { 
+            mp2 = new Mprogress({
+                template: 2,
+                parent: '#demoIn'
+            });
+            mp2.start();
+        });
+         $("#demoInEnd").click(function() { 
+            mp2.end();
+        });
+
+        // mp3
+        $("#demoBufferStart").click(function() { 
+             mp3 = new Mprogress({
+                template: 3,
+                parent: '#demoBuffer'
+            });
+
+            mp3.start();
+        });
+        $("#demoBufferEnd").click(function() { 
+            mp3.end();
+        });
+
+        // mp4 
+        $("#demoQueryStart").click(function() { 
+
+             mp4 = new Mprogress({
+                template: 4,
+                parent: '#demoQuery'
+            });
+            mp4.start();
+
+        });
+        $("#demoQueryEnd").click(function() { 
+            mp4.end();
+        });
+    }
+
+    bindEvent();
+</script>
 </body>
 </html>
