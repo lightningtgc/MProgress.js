@@ -30,7 +30,9 @@
         template: 1
     };
 
-    var UN_TPL_ID = '99';
+    var TPL_UNKOWN_ID = '99';
+    var SPEED_ANIMATION_SHOW = 3000;
+    var SPEED_ANIMATION_HIDE = 4000;
 
     var renderTemplate = {
 
@@ -60,13 +62,18 @@
 
     var Mprogress = function(opt) {
         var options = Utils.extend(opt, SETTINGS);
-        var idName = 'mprogress' + ~~options.template;
-        var data = cacheStore[idName] || '';
+        var idName  = options.parent + options.template;
+        var data    = cacheStore[idName] || '';
 
         if(!data){
             data = new MProgress(options);
             cacheStore[idName] = data;
-        } 
+        }
+        
+        if(typeof opt === 'string' && typeof data[opt] === 'function') {
+            // using like: Mprogress('start');
+            data[opt]();
+        }
 
         return data;
     };
@@ -96,7 +103,7 @@
 
 
             /**
-             * indeterminate and query just has 'start' and 'done' method 
+             * indeterminate and query just has 'start' and 'end' method 
              */
 
             if (this._isIndeterminateStyle() || this._isQueryStyle()) {
@@ -104,7 +111,7 @@
             }
             
 
-            var self = this;
+            var that = this;
             // buffer show front dashed scroll
             if ( this._isBufferStyle() ) {
                 if (!this.bufferStatus) this.setBuffer(0);
@@ -116,20 +123,99 @@
                     Utils.hideEl(dashed);
                     Utils.removeClass(dashed, 'active');
                     Utils.showEl(dashed);
-                }, 3000);
+                }, SPEED_ANIMATION_SHOW);
             }
 
-            var work = function() {
+            function work() {
                 setTimeout(function() {
-                    if (!self.status) return;
-                    self.trickle();
+                    if (!that.status) return;
+                    that.trickle();
                     work();
-                }, self.options.trickleSpeed);
+                }, that.options.trickleSpeed);
             };
 
             if (this.options.trickle) work();
 
             return this;
+        },
+
+         /**
+         * Hides the progress bar.
+         * This is the *sort of* the same as setting the status to 100%, with the
+         * difference being `end()` makes some placebo effect of some realistic motion.
+         *
+         *     MProgress.end();
+         *
+         * If `true` is passed, it will show the progress bar even if its hidden.
+         *
+         *     MProgress.end(true);
+         */
+        end: function(force) {
+            if (!force && !this.status) return this;
+
+            var that    = this;
+            var speed   = this.options.speed;
+
+            var progress = this._getRenderedId();
+
+            if (this._isIndeterminateStyle()) {
+                // Fade out
+                Utils.setcss(progress, { 
+                    transition: 'none', 
+                    opacity: 1 
+                });
+                progress.offsetWidth; /* Repaint */
+
+                setTimeout(function() {
+                    Utils.setcss(progress, { 
+                        transition: 'all ' + speed + 'ms linear', 
+                        opacity: 0 
+                    });
+                    setTimeout(function() {
+                        that.remove();
+                    }, speed);
+                }, speed);
+            }
+
+            if (this._isQueryStyle()) {
+                // add one more animation
+                if (this._isRendered()) {
+                     var bar = progress.querySelector(this._getCurrSelector());
+                     Utils.addClass(bar, 'end');
+                
+
+                setTimeout(function(){
+                    that.remove();
+                }, SPEED_ANIMATION_HIDE);
+
+                return;
+                }
+            }
+
+            return this.inc(0.3 + 0.5 * Math.random()).set(1);
+        },
+
+        /**
+         * Increments by a random amount.
+         */
+        inc: function(amount) {
+            var n = this.status;
+            var bn = this.bufferStatus;
+
+            if (!n) {
+                return this.start();
+            } else {
+                n = this._getRandomNum(n, amount);
+                if ( this._isBufferStyle()) {
+                    bn = this._getRandomNum( n + 0.1, amount);
+                    this.setBuffer(bn);
+                }
+                return this.set(n);
+            }
+        },
+
+        trickle: function() {
+            return this.inc(Math.random() * this.options.trickleRate);
         },
 
         /**
@@ -157,47 +243,6 @@
         },
 
         /**
-         * Hides the progress bar.
-         * This is the *sort of* the same as setting the status to 100%, with the
-         * difference being `done()` makes some placebo effect of some realistic motion.
-         *
-         *     MProgress.done();
-         *
-         * If `true` is passed, it will show the progress bar even if its hidden.
-         *
-         *     MProgress.done(true);
-         */
-        done: function(force) {
-            if (!force && !this.status) return this;
-
-            return this.inc(0.3 + 0.5 * Math.random()).set(1);
-        },
-
-
-        /**
-         * Increments by a random amount.
-         */
-        inc: function(amount) {
-            var n = this.status;
-            var bn = this.bufferStatus;
-
-            if (!n) {
-                return this.start();
-            } else {
-                n = this._getRandomNum(n, amount);
-                if ( this._isBufferStyle()) {
-                    bn = this._getRandomNum( n + 0.1, amount);
-                    this.setBuffer(bn);
-                }
-                return this.set(n);
-            }
-        },
-
-        trickle: function() {
-            return this.inc(Math.random() * this.options.trickleRate);
-        },
-
-        /**
          * (Internal) renders the progress bar markup based on the `template`
          * setting.
          */
@@ -206,19 +251,16 @@
                 return this._getRenderedId();
             }
 
-            var progress = document.createElement('div'),
-            currTpl  = this._getCurrTemplate() || '',
-            bar,
-            perc,
-            MParent;
+            var progress = document.createElement('div');
+            var currTpl  = this._getCurrTemplate() || '';
 
             progress.id = this._getRenderedId(true);
             progress.className = 'ui-mprogress';
             progress.innerHTML = currTpl;
 
-            bar      = progress.querySelector(this._getCurrSelector());
-            perc     = fromStart ? '-100' : Utils.toBarPerc(this.status || 0);
-            MParent  = document.querySelector(this.options.parent);
+            var bar      = progress.querySelector(this._getCurrSelector());
+            var perc     = fromStart ? '-100' : Utils.toBarPerc(this.status || 0);
+            var MParent  = document.querySelector(this.options.parent);
 
             Utils.setcss(bar, {
                 transition: 'all 0 linear',
@@ -253,6 +295,12 @@
                 Utils.removeClass(MParent, 'mprogress-custom-parent');
             }
 
+            // clear cache 
+            var idName  = this.options.parent + this.options.template;
+            if  (cacheStore[idName]) {
+                cacheStore[idName] = null;
+            }
+
             progress && Utils.removeElement(progress);
         },
 
@@ -266,12 +314,12 @@
             var bar      = progress.querySelector(barSelector);
             var speed    = this.options.speed;
             var ease     = this.options.easing;
-            var self     = this;
+            var that     = this;
 
             progress.offsetWidth; /* Repaint */ 
 
             /**
-             * indeterminate and query just has 'start' and 'done' method 
+             * indeterminate and query just has 'start' and 'end' method 
              */
 
             if (this._isIndeterminateStyle() || this._isQueryStyle()) {
@@ -280,10 +328,10 @@
 
             Utils.queue(function(next) {
                 // Set positionUsing if it hasn't already been set
-                if (self.options.positionUsing === '') self.options.positionUsing = self._getPositioningCSS();
+                if (that.options.positionUsing === '') that.options.positionUsing = that._getPositioningCSS();
 
                 // Add transition
-                Utils.setcss(bar, self._barPositionCSS(n, speed, ease));
+                Utils.setcss(bar, that._barPositionCSS(n, speed, ease));
 
                 if (n === 1) {
                     // Fade out
@@ -299,7 +347,7 @@
                             opacity: 0 
                         });
                         setTimeout(function() {
-                            self.remove();
+                            that.remove();
                             next();
                         }, speed);
                     }, speed);
@@ -314,7 +362,7 @@
         _getCurrSelector: function(){
             var tplType = this._getCurrTplId();
 
-            if(tplType !== UN_TPL_ID) {
+            if (tplType !== TPL_UNKOWN_ID) {
                 return '[role="mpbar' + tplType + '"]' 
             } else {
                 return this.options.barSelector; 
@@ -372,7 +420,7 @@
             if (typeof tplType === 'number') {
                 return tplType;
             } else {
-                return UN_TPL_ID;
+                return TPL_UNKOWN_ID;
             } 
 
         },
@@ -445,6 +493,10 @@
     var Utils = {
         extend: function(newObj, targetObj) {
             targetObj = JSON.parse(JSON.stringify(targetObj));
+            if (typeof newObj === 'string') {
+                return targetObj;
+            }
+
             var key, value;
             for (var key in newObj) {
                 value = newObj[key];
@@ -475,14 +527,14 @@
                 if (pending.length == 1) next();
             };
         })(),
-           /**
+
+        /**
          * (Internal) Applies css properties to an element, similar to the jQuery 
          * setcss method.
          *
          * While this helper does assist with vendor prefixed property names, it 
          * does not perform any manipulation of values prior to setting styles.
          */
-
         setcss: (function() {
             var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
             cssProps    = {};
@@ -533,6 +585,7 @@
                 }
             }
         })(),
+
         clamp: function(n, min, max) {
             if (n < min) return min;
             if (n > max) return max;
@@ -543,7 +596,6 @@
          * (Internal) converts a percentage (`0..1`) to a bar translateX
          * percentage (`-100%..0%`).
          */
-
         toBarPerc: function(n) {
             return (-1 + n) * 100;
         },
@@ -552,6 +604,7 @@
             var list = typeof element == 'string' ? element : Utils.classList(element);
             return list.indexOf(' ' + name + ' ') >= 0;
         },
+
         addClass: function(element, name) {
             var oldList = Utils.classList(element),
             newList = oldList + name;
@@ -561,6 +614,7 @@
             // Trim the opening space.
             element.className = newList.substring(1);
         },
+
         removeClass: function(element, name) {
             var oldList = Utils.classList(element),
             newList;
@@ -573,16 +627,19 @@
             // Trim the opening and closing spaces.
             element.className = newList.substring(1, newList.length - 1);
         },
+
         showEl: function(element) {
             Utils.setcss(element, {
                 display: 'block'
             });
         },
+
         hideEl: function(element) {
             Utils.setcss(element, {
                 display: 'none'
             });
         },
+
         classList: function(element) {
             return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
         },
@@ -611,10 +668,10 @@
                 return this;
             }
 
-            var self = this;
+            var that = this;
 
             if (current == 0) {
-                self.start();
+                that.start();
             }
 
             initial++;
@@ -624,9 +681,9 @@
                 current--;
                 if (current == 0) {
                     initial = 0;
-                    self.done();
+                    that.end();
                 } else {
-                    self.set((initial - current) / initial);
+                    that.set((initial - current) / initial);
                 }
             });
 
