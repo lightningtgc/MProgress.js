@@ -32,7 +32,7 @@
 
     var TPL_UNKOWN_ID = '99';
     var SPEED_ANIMATION_SHOW = 3000;
-    var SPEED_ANIMATION_HIDE = 4000;
+    var SPEED_ANIMATION_HIDE = 2000;
 
     var renderTemplate = {
 
@@ -42,7 +42,6 @@
                         '<div class="bar-bg"></div>',
 
         indeterminate:  '<div class="indeter-bar" role="mpbar2">'+
-                            '<div class="peg"></div>'+
                         '</div>'+ 
                         '<div class="bar-bg"></div>',
 
@@ -101,23 +100,21 @@
         start: function() {
             if (!this.status) this.set(0);
 
-
             /**
              * indeterminate and query just has 'start' and 'end' method 
              */
-
             if (this._isIndeterminateStyle() || this._isQueryStyle()) {
                 return this;
             }
-            
 
             var that = this;
             // buffer show front dashed scroll
             if ( this._isBufferStyle() ) {
-                if (!this.bufferStatus) this.setBuffer(0);
-                var started  = this._isStarted(),
-                progress = this.render(!started),
-                dashed   = progress.querySelector(this.options.dashedSelector);
+                if (!this.bufferStatus){
+                    this.setBuffer(0);
+                }
+                var progress = this.render();
+                var dashed   = progress.querySelector(this.options.dashedSelector);
                 Utils.addClass(dashed, 'active');
                 setTimeout(function(){
                     Utils.hideEl(dashed);
@@ -155,7 +152,6 @@
 
             var that    = this;
             var speed   = this.options.speed;
-
             var progress = this._getRenderedId();
 
             if (this._isIndeterminateStyle()) {
@@ -175,20 +171,21 @@
                         that.remove();
                     }, speed);
                 }, speed);
+
+                return this;
             }
 
             if (this._isQueryStyle()) {
-                // add one more animation
+                // add one more animation and remove it
                 if (this._isRendered()) {
-                     var bar = progress.querySelector(this._getCurrSelector());
-                     Utils.addClass(bar, 'end');
-                
+                    var bar = progress.querySelector(this._getCurrSelector());
+                    Utils.addClass(bar, 'end');
 
-                setTimeout(function(){
-                    that.remove();
-                }, SPEED_ANIMATION_HIDE);
+                    setTimeout(function(){
+                        that.remove();
+                    }, SPEED_ANIMATION_HIDE);
 
-                return;
+                    return this;
                 }
             }
 
@@ -246,34 +243,46 @@
          * (Internal) renders the progress bar markup based on the `template`
          * setting.
          */
-        render: function(fromStart) {
+        render: function(noFromStart) {
             if (this._isRendered()) {
                 return this._getRenderedId();
             }
 
             var progress = document.createElement('div');
             var currTpl  = this._getCurrTemplate() || '';
-
+            var MParent  = document.querySelector(this.options.parent);
+            var fromStart;
+            
             progress.id = this._getRenderedId(true);
             progress.className = 'ui-mprogress';
             progress.innerHTML = currTpl;
 
-            var bar      = progress.querySelector(this._getCurrSelector());
-            var perc     = fromStart ? '-100' : Utils.toBarPerc(this.status || 0);
-            var MParent  = document.querySelector(this.options.parent);
+            if (!this._isIndeterminateStyle() && !this._isQueryStyle()) {
 
-            Utils.setcss(bar, {
-                transition: 'all 0 linear',
-                transform: 'translate3d(' + perc + '%,0,0)'
-            });
+                // Default: fromstart
+                if (!noFromStart) {
+                    fromStart = !this._isStarted(); 
+                }
 
-            if ( this._isBufferStyle() ) {
-                var buffer  = progress.querySelector(this.options.bufferSelector),
-                bufferPerc = fromStart ? '-100' : Utils.toBarPerc(this.bufferStatus || 0);
-                Utils.setcss(buffer, {
+                var bar      = progress.querySelector(this._getCurrSelector());
+                var perc     = fromStart ? '-100' : Utils.toBarPerc(this.status || 0);
+
+                Utils.setcss(bar, {
                     transition: 'all 0 linear',
-                    transform: 'translate3d(' + bufferPerc + '%,0,0)'
+                    transform: 'translate3d(' + perc + '%,0,0)'
                 });
+
+
+
+                if ( this._isBufferStyle() ) {
+                    var buffer  = progress.querySelector(this.options.bufferSelector),
+                    bufferPerc = fromStart ? '-100' : Utils.toBarPerc(this.bufferStatus || 0);
+                    Utils.setcss(buffer, {
+                        transition: 'all 0 linear',
+                        transform: 'translate3d(' + bufferPerc + '%,0,0)'
+                    });
+                }
+
             }
 
             if (MParent != document.body) {
@@ -309,8 +318,7 @@
          *
          */
         _setProgress: function(barSelector, n){
-            var started  = this._isStarted();
-            var progress = this.render(!started);
+            var progress = this.render();
             var bar      = progress.querySelector(barSelector);
             var speed    = this.options.speed;
             var ease     = this.options.easing;
