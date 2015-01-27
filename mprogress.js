@@ -32,7 +32,7 @@
 
     var TPL_UNKOWN_ID = '99';
     var SPEED_ANIMATION_SHOW = 3000;
-    var SPEED_ANIMATION_HIDE = 2000;
+    var SPEED_ANIMATION_HIDE = 1500;
 
     var renderTemplate = {
 
