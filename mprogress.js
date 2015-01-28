@@ -26,7 +26,7 @@
         speed: 200,
         trickle: true,
         trickleRate: 0.02,
-        trickleSpeed: 800,
+        trickleSpeed: 800
     };
 
     var TPL_UNKOWN_ID = '99';
@@ -43,15 +43,15 @@
                         '</div>'+
                         '<div class="bar-bg"></div>',
 
-        indeterminate:  '<div class="indeter-bar" role="mpbar2">'+
-                        '</div>'+ 
-                        '<div class="bar-bg"></div>',
-
-        buffer:         '<div class="deter-bar" role="mpbar3">'+
+        buffer:         '<div class="deter-bar" role="mpbar2">'+
                             '<div class="peg"></div>'+
                         '</div>'+
                         '<div class="buffer-bg" role="bufferBar"></div>' +
                         '<div class="mp-ui-dashed" role="dashed"></div>',
+
+        indeterminate:  '<div class="indeter-bar" role="mpbar3">'+
+                        '</div>'+ 
+                        '<div class="bar-bg"></div>', 
 
         query:          '<div class="query-bar" role="mpbar4">'+
                             '<div class="peg"></div>'+
@@ -117,7 +117,7 @@
                 if (!this.bufferStatus){
                     this.setBuffer(0);
                 }
-                var progress = this.render();
+                var progress = this._render();
                 var dashed   = progress.querySelector(SELECTOR_DASHED);
                 Utils.addClass(dashed, 'active');
                 setTimeout(function(){
@@ -172,7 +172,7 @@
                         opacity: 0 
                     });
                     setTimeout(function() {
-                        that.remove();
+                        that._remove();
                     }, speed);
                 }, speed);
 
@@ -186,7 +186,7 @@
                     Utils.addClass(bar, 'end');
 
                     setTimeout(function(){
-                        that.remove();
+                        that._remove();
                     }, SPEED_ANIMATION_HIDE);
 
                     return this;
@@ -245,9 +245,9 @@
 
         /**
          * (Internal) renders the progress bar markup based on the `template`
-         * setting.
+         * 
          */
-        render: function(noFromStart) {
+        _render: function(noFromStart) {
             if (this._isRendered()) {
                 return this._getRenderedId();
             }
@@ -298,9 +298,9 @@
         },
 
         /**
-         * Removes the element. Opposite of render().
+         * Removes the element. Opposite of _render().
          */
-        remove: function() {
+        _remove: function() {
             var progress = this._getRenderedId(),
             MParent   = document.querySelector(this.options.parent);
 
@@ -322,7 +322,7 @@
          *
          */
         _setProgress: function(barSelector, n){
-            var progress = this.render();
+            var progress = this._render();
             var bar      = progress.querySelector(barSelector);
             var speed    = this.options.speed;
             var ease     = this.options.easing;
@@ -359,7 +359,7 @@
                             opacity: 0 
                         });
                         setTimeout(function() {
-                            that.remove();
+                            that._remove();
                             next();
                         }, speed);
                     }, speed);
@@ -415,11 +415,11 @@
             }
         },
 
-        _isIndeterminateStyle: function() {
-            return this._getCurrTplId() === 2;
-        },
-
         _isBufferStyle: function() {
+            return this._getCurrTplId() === 2;
+        }, 
+
+        _isIndeterminateStyle: function() {
             return this._getCurrTplId() === 3;
         },
 
@@ -439,7 +439,7 @@
 
         _getCurrTemplate: function() {
             var tplType = this.options.template || 1,
-            tplNameArr = ['determinate', 'indeterminate', 'buffer', 'query'],
+            tplNameArr = ['determinate', 'buffer', 'indeterminate', 'query'],
             tplKey;
 
             if (typeof ~~tplType === 'number') {

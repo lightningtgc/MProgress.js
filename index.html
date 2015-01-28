@@ -57,27 +57,26 @@
         increase by a little
       </p>
     </div>
-
     <div class="demo-block">
-        <h3>Type2: Indeterminate</h3>
-        <p><i>var mprogress2 = new Mprogress({
+        <h3>Type2: Buffer</h3>
+                <p><i>var mprogress2 = new Mprogress({
                 template: 2,
-                parent: '#demoIn'
-            });</i></p>
-        <span class="demo-button" id="demoInStart"> start </span>
-        <span class="demo-button" id="demoInEnd"> end </span>
-        <div id="demoIn" class="demo-bar"></div>
-    </div>
-    <div class="demo-block">
-        <h3>Type3: Buffer</h3>
-                <p><i>var mprogress3 = new Mprogress({
-                template: 3,
                 parent: '#demoBuffer'
             });</i></p>
         <span class="demo-button" id="demoBufferStart"> start </span>
         <span class="demo-button" id="demoBufferEnd"> end </span>
         <div id="demoBuffer" class="demo-bar"></div>
     </div>
+    <div class="demo-block">
+        <h3>Type3: Indeterminate</h3>
+        <p><i>var mprogress3 = new Mprogress({
+                template: 3,
+                parent: '#demoIn'
+            });</i></p>
+        <span class="demo-button" id="demoInStart"> start </span>
+        <span class="demo-button" id="demoInEnd"> end </span>
+        <div id="demoIn" class="demo-bar"></div>
+    </div>     
     <div class="demo-block">
         <h3>Type4: Query Indeterminate and Determinate</h3>
                 <p><i>var mprogress4 = new Mprogress({
@@ -118,34 +117,34 @@
             mp.end(); 
         });
 
-        // mp2 
-        $("#demoInStart").click(function() { 
-            mp2 = new Mprogress({
-                template: 2,
-                parent: '#demoIn'
-            });
-            mp2.start();
-        });
-         $("#demoInEnd").click(function() { 
-            mp2.end();
-        });
-
-        // mp3
+        // mp2
         $("#demoBufferStart").click(function() { 
-             mp3 = new Mprogress({
-                template: 3,
+             mp2 = new Mprogress({
+                template: 2,
                 parent: '#demoBuffer'
             });
 
+            mp2.start();
+        });
+        
+        $("#demoBufferEnd").click(function() { 
+            mp2.end();
+        });
+
+        // mp3 
+        $("#demoInStart").click(function() { 
+            mp3 = new Mprogress({
+                template: 3,
+                parent: '#demoIn'
+            });
             mp3.start();
         });
-        $("#demoBufferEnd").click(function() { 
+         $("#demoInEnd").click(function() { 
             mp3.end();
         });
 
         // mp4 
         $("#demoQueryStart").click(function() { 
-
              mp4 = new Mprogress({
                 template: 4,
                 parent: '#demoQuery'
