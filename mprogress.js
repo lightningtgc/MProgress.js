@@ -16,6 +16,10 @@
     'use strict';
 
     var SETTINGS = {
+        template: 1,
+        parent: 'body',
+        start: false,
+
         minimum: 0.08,
         easing: 'ease',
         positionUsing: '',
@@ -23,16 +27,14 @@
         trickle: true,
         trickleRate: 0.02,
         trickleSpeed: 800,
-        barSelector: '[role="mpbar"]',
-        bufferSelector: '[role="bufferBar"]',
-        dashedSelector: '[role="dashed"]',
-        parent: 'body',
-        template: 1
     };
 
     var TPL_UNKOWN_ID = '99';
     var SPEED_ANIMATION_SHOW = 3000;
     var SPEED_ANIMATION_HIDE = 1500;
+    var SELECTOR_BAR = '[role="mpbar"]';
+    var SELECTOR_BUFFER = '[role="bufferBar"]';
+    var SELECTOR_DASHED = '[role="dashed"]';
 
     var renderTemplate = {
 
@@ -72,6 +74,8 @@
         if(typeof opt === 'string' && typeof data[opt] === 'function') {
             // using like: Mprogress('start');
             data[opt]();
+        } else if (options['start']) {
+            data.start();
         }
 
         return data;
@@ -114,7 +118,7 @@
                     this.setBuffer(0);
                 }
                 var progress = this.render();
-                var dashed   = progress.querySelector(this.options.dashedSelector);
+                var dashed   = progress.querySelector(SELECTOR_DASHED);
                 Utils.addClass(dashed, 'active');
                 setTimeout(function(){
                     Utils.hideEl(dashed);
@@ -234,7 +238,7 @@
             n = Utils.clamp(n, this.options.minimum, 1);
             this.bufferStatus = (n === 1 ? null : n);
 
-            this._setProgress(this.options.bufferSelector, n);
+            this._setProgress(SELECTOR_BUFFER, n);
 
             return this;
         },
@@ -275,7 +279,7 @@
 
 
                 if ( this._isBufferStyle() ) {
-                    var buffer  = progress.querySelector(this.options.bufferSelector),
+                    var buffer  = progress.querySelector(SELECTOR_BUFFER),
                     bufferPerc = fromStart ? '-100' : Utils.toBarPerc(this.bufferStatus || 0);
                     Utils.setcss(buffer, {
                         transition: 'all 0 linear',
@@ -373,7 +377,7 @@
             if (tplType !== TPL_UNKOWN_ID) {
                 return '[role="mpbar' + tplType + '"]' 
             } else {
-                return this.options.barSelector; 
+                return SELECTOR_BAR; 
             }
         },
 
