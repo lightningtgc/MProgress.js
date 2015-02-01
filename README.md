@@ -3,7 +3,7 @@ MProgress.js
 
 Google Material Design Progress Linear bar.
 
-It using CSS3 and pure js, and it's not depend on any library.
+It using CSS3 and pure js which don't depend on any other libraries.
 
 ## Types and preview
 
@@ -11,13 +11,13 @@ Type 1. `Determinate`
 
 <img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/determinate.gif" />
 
-Type 2. `Indeterminate`
-
-<img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/indeterminate.gif" />
-
-Type 3. `Buffer`
+Type 2. `Buffer`
 
 <img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/buffer.gif" />
+
+Type 3. `Indeterminate`
+
+<img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/indeterminate.gif" />
 
 Type 4. `Query Indeterminate and  Determinate`
 
@@ -71,7 +71,66 @@ mprogress.end();
 
 ## Advanced usage
 
+All types have `start` and `end` methods.
+
+### Determinate
+
+`Determinate` also have `set` and `inc` methods.
+
+#### `set(n)` sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+
+eg:
+```js
+mprogress.set(0.3);
+```
+
+#### `inc()` increases by a random amount slowly.
+
+eg:
+```js
+mprogress.inc();
+```
 
 
+### Buffer 
 
+It always used for vedio loading,and you can using for other case.
 
+Init Type Buffer :
+
+```js
+var bufferIntObj = {
+  template: 2
+};
+var bufferProgress = new Mprogress(bufferIntObj);
+```
+
+Start it:
+
+```js
+bufferProgress.start();
+```
+
+If you want to start it immediately when instantiate it，you can use:
+
+```js
+var bufferIntObj = {
+  template: 2,
+  start: true
+};
+var bufferProgress = new Mprogress(bufferIntObj);
+```
+
+End it: 
+
+```js
+bufferProgress.end();
+```
+
+`Buffer` also have `set` , `inc` and `setBuffer` methods
+
+Type `Buffer` has two progress: main progress and buffer progress.
+
+#### `set(n)` sets the main progress bar status (0,1)
+
+#### `setBuffer(num)` sets the buffer progress bar status (0,1)
