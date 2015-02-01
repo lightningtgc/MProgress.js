@@ -9,11 +9,19 @@ It using CSS3 and pure js, and it's not depend on any library.
 
 Type 1. `Determinate`
 
+<img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/determinate.gif" />
+
 Type 2. `Indeterminate`
+
+<img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/indeterminate.gif" />
 
 Type 3. `Buffer`
 
+<img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/buffer.gif" />
+
 Type 4. `Query Indeterminate and  Determinate`
+
+<img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/query.gif" />
 
 Or you can see the video of all types:  [Material Progress & activity](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0B0NGgBg38lWWYmNmallST001a1k/components-progressactivity-typesofindicators-061101_Linear_Sheet_xhdpi_003.webm)
 
@@ -32,7 +40,7 @@ Including [mprogress.js] and [mprogress.css] into your target html file.
 
 ## Basic usage
 
-Example for the type one `Determinate`
+Example for the `Determinate` type
 
 1.Instantiation:
 
