@@ -23,7 +23,10 @@ Type 4. `Query Indeterminate and  Determinate`
 
 <img src="https://raw.githubusercontent.com/lightningtgc/MProgress.js/gh-pages/styles/images/query.gif" />
 
-Or you can see the video of all types:  [Material Progress & activity](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0B0NGgBg38lWWYmNmallST001a1k/components-progressactivity-typesofindicators-061101_Linear_Sheet_xhdpi_003.webm)
+
+Or you can see all types together:
+
+[Vedio：Material Progress & activity](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0B0NGgBg38lWWYmNmallST001a1k/components-progressactivity-typesofindicators-061101_Linear_Sheet_xhdpi_003.webm)
 
 
 ## How to start
