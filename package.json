@@ -1,0 +1,15 @@
+﻿{
+  "name": "mprogress",
+  "description": "Mprogress.js creates progress linear bar from Google Material Design.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/lightningtgc/MProgress.js",
+  "author": "tang guichuan <tangguichuan@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lightningtgc/MProgress.js.git"
+  },  
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-stylus": "^2.0.0"
+  }
+}
