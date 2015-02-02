@@ -62,7 +62,7 @@ body {
     color: #FFF;
     font-size: 1.7rem;
     border-radius: 3px;
-    margin: 20px 20px 0 0;
+    margin: 15px 12px 5px 0;
     cursor: pointer;
 }
 .demo-button.btn-big {
@@ -81,7 +81,8 @@ body {
 }
 
 .demo-code.short {
-    padding:6px 15px;
+    padding: 0.4rem 1.3rem;
+    line-height: 1.8;
 }
 .demo-code .indent {
     padding-left:25px;
