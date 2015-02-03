@@ -162,7 +162,18 @@
             var speed   = this.options.speed;
             var progress = this._getRenderedId();
 
+            if (this._isBufferStyle() && force) {
+                return this.set(0).set(1);
+            }
+
             if (this._isIndeterminateStyle()) {
+
+                // force end
+                if(!this._isRendered() && force) {
+                    this.set(0);
+                    progress = this._getRenderedId();
+                    speed = SPEED_ANIMATION_SHOW;
+                }
                 // Fade out
                 Utils.setcss(progress, { 
                     transition: 'none', 
@@ -194,7 +205,15 @@
                     }, SPEED_ANIMATION_HIDE);
 
                     return this;
+                } else if(force) {
+                    this.set(0);
+                    progress = this._getRenderedId();
+                    setTimeout(function(){
+                        that._remove();
+                    }, SPEED_ANIMATION_HIDE);
+                    return this;
                 }
+
             }
 
             return this.inc(0.3 + 0.5 * Math.random()).set(1);
