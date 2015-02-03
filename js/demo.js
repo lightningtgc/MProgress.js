@@ -1,9 +1,21 @@
 (function(){
-    var mp,mp2,mp3,mp4;
-
     //var newMp = new Mprogress('start');
     var mp = new Mprogress();
 
+    var mp2 = new Mprogress({
+        template: 2,
+        parent: '#demoBuffer'
+    });
+
+    var mp3 = new Mprogress({
+        template: 3,
+        parent: '#demoIn'
+    });
+
+    var  mp4 = new Mprogress({
+        template: 4,
+        parent: '#demoQuery'
+    });
 
     function bindEvent(){
 
@@ -17,20 +29,15 @@
             mp.inc(); 
         });
         $("#demoDeEnd").click(function() {
-            mp.end(); 
+            mp.end(true); 
         });
 
         // mp2
         $("#demoBufferStart").click(function() { 
-             mp2 = new Mprogress({
-                template: 2,
-                parent: '#demoBuffer'
-            });
-
             mp2.start();
         });
         $("#demoBufferEnd").click(function() { 
-            mp2.end();
+            mp2.end(true);
         });
         $("#demoBufferSet").click(function() {
             mp2.set(0.4);
@@ -39,32 +46,23 @@
             mp2.setBuffer(0.5);
         });
         $("#demoBufferInc").click(function() { 
-            mp2.inc(); 
+            mp2.inc();
         });
 
         // mp3 
         $("#demoInStart").click(function() { 
-            mp3 = new Mprogress({
-                template: 3,
-                parent: '#demoIn'
-            });
             mp3.start();
         });
         $("#demoInEnd").click(function() { 
-            mp3.end();
+            mp3.end(true);
         });
 
         // mp4 
         $("#demoQueryStart").click(function() { 
-             mp4 = new Mprogress({
-                template: 4,
-                parent: '#demoQuery'
-            });
             mp4.start();
-
         });
         $("#demoQueryEnd").click(function() { 
-            mp4.end();
+            mp4.end(true);
         });
     }
 

@@ -30,7 +30,7 @@
     };
 
     var TPL_UNKOWN_ID = '99';
-    var SPEED_ANIMATION_SHOW = 3000;
+    var SPEED_ANIMATION_SHOW = 500;
     var SPEED_ANIMATION_HIDE = 1500;
     var SELECTOR_BAR = '[role="mpbar"]';
     var SELECTOR_BUFFER = '[role="bufferBar"]';
@@ -102,10 +102,10 @@
          *
          */
         start: function() {
-            if (!this.status) this.set(0);
+            if (!this.status && !this._isBufferStyle()) this.set(0);
 
             /**
-             * indeterminate and query just has 'start' and 'end' method 
+             * indeterminate and query just have 'start' and 'end' method 
              */
             if (this._isIndeterminateStyle() || this._isQueryStyle()) {
                 return this;
@@ -113,24 +113,28 @@
 
             var that = this;
             // buffer show front dashed scroll
-            if ( this._isBufferStyle() ) {
-                if (!this.bufferStatus){
-                    this.setBuffer(0);
-                }
+            if ( this._isBufferStyle() && !this.bufferStatus ) {
+                
                 var progress = this._render();
                 var dashed   = progress.querySelector(SELECTOR_DASHED);
-                Utils.addClass(dashed, 'active');
+                var bar = progress.querySelector(this._getCurrSelector());
+
+                Utils.hideEl(bar);
+                Utils.hideEl(dashed);
+                this.setBuffer(0).setBuffer(1);
+
                 setTimeout(function(){
-                    Utils.hideEl(dashed);
-                    Utils.removeClass(dashed, 'active');
                     Utils.showEl(dashed);
+                    Utils.showEl(bar);
+
+                    that.set(0).setBuffer(0);
                 }, SPEED_ANIMATION_SHOW);
             }
 
             function work() {
                 setTimeout(function() {
                     if (!that.status) return;
-                    that.trickle();
+                    that._trickle();
                     work();
                 }, that.options.trickleSpeed);
             };
@@ -158,7 +162,18 @@
             var speed   = this.options.speed;
             var progress = this._getRenderedId();
 
+            if (this._isBufferStyle() && force) {
+                return this.set(0).set(1);
+            }
+
             if (this._isIndeterminateStyle()) {
+
+                // force end
+                if(!this._isRendered() && force) {
+                    this.set(0);
+                    progress = this._getRenderedId();
+                    speed = SPEED_ANIMATION_SHOW;
+                }
                 // Fade out
                 Utils.setcss(progress, { 
                     transition: 'none', 
@@ -190,33 +205,18 @@
                     }, SPEED_ANIMATION_HIDE);
 
                     return this;
+                } else if(force) {
+                    this.set(0);
+                    progress = this._getRenderedId();
+                    setTimeout(function(){
+                        that._remove();
+                    }, SPEED_ANIMATION_HIDE);
+                    return this;
                 }
+
             }
 
             return this.inc(0.3 + 0.5 * Math.random()).set(1);
-        },
-
-        /**
-         * Increments by a random amount.
-         */
-        inc: function(amount) {
-            var n = this.status;
-            var bn = this.bufferStatus;
-
-            if (!n) {
-                return this.start();
-            } else {
-                n = this._getRandomNum(n, amount);
-                if ( this._isBufferStyle()) {
-                    bn = this._getRandomNum( n + 0.1, amount);
-                    this.setBuffer(bn);
-                }
-                return this.set(n);
-            }
-        },
-
-        trickle: function() {
-            return this.inc(Math.random() * this.options.trickleRate);
         },
 
         /**
@@ -243,6 +243,28 @@
             return this;
         },
 
+         /**
+         * Increments by a random amount.
+         */
+        inc: function(amount) {
+            var n = this.status;
+            var bn = this.bufferStatus;
+
+            if (!n) {
+                return this.start();
+            } else {
+                n = this._getRandomNum(n, amount);
+                if ( this._isBufferStyle()) {
+                    bn = this._getRandomNum( bn > n ? bn : n + 0.1, amount);
+                    this.setBuffer(bn);
+                }
+                return this.set(n);
+            }
+        },
+
+        _trickle: function() {
+            return this.inc(Math.random() * this.options.trickleRate);
+        },
         /**
          * (Internal) renders the progress bar markup based on the `template`
          * 
@@ -314,7 +336,11 @@
                 cacheStore[idName] = null;
             }
 
-            progress && Utils.removeElement(progress);
+            if (progress) {
+                this.status = null;
+                this.bufferStatus = null;
+                Utils.removeElement(progress);
+            }
         },
 
         /**
@@ -706,4 +732,5 @@
 
     return Mprogress;
 });
+
 
