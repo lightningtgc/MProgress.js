@@ -28,6 +28,9 @@ Or you can see all types together:
 
 [Vedio：Material Progress & activity](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0B0NGgBg38lWWYmNmallST001a1k/components-progressactivity-typesofindicators-061101_Linear_Sheet_xhdpi_003.webm)
 
+### DEMO
+
+[See the Online demo](http://lightningtgc.github.io/MProgress.js/)
 
 ## How to start
 
@@ -73,26 +76,31 @@ mprogress.end();
 
 All types have `start` and `end` methods.
 
-### Determinate
+#### Type1:Determinate
 
 `Determinate` also have `set` and `inc` methods.
 
-#### `set(n)` sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+##### set(n)
+
+sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
 
 eg:
 ```js
 mprogress.set(0.3);
 ```
 
-#### `inc()` increases by a random amount slowly.
+##### inc()
+
+increases by a random amount.
 
 eg:
 ```js
-mprogress.inc();
+mprogress.inc(); // Increase the bar with a random amount.
+mprogress.inc(0.3); // This will get the current status value and adds 0.3 until status is 0.994
 ```
 
 
-### Buffer 
+#### Type2:Buffer 
 
 It always used for vedio loading,and you can using for other case.
 
@@ -105,7 +113,7 @@ var bufferIntObj = {
 var bufferProgress = new Mprogress(bufferIntObj);
 ```
 
-Start it:
+##### Start it:
 
 ```js
 bufferProgress.start();
@@ -115,13 +123,13 @@ If you want to start it immediately when instantiate it，you can use:
 
 ```js
 var bufferIntObj = {
-  template: 2,
+  template: 2, // type number
   start: true
 };
 var bufferProgress = new Mprogress(bufferIntObj);
 ```
 
-End it: 
+##### End it: 
 
 ```js
 bufferProgress.end();
@@ -131,6 +139,70 @@ bufferProgress.end();
 
 Type `Buffer` has two progress: main progress and buffer progress.
 
-#### `set(n)` sets the main progress bar status (0,1)
+##### `set(n)` 
 
-#### `setBuffer(num)` sets the buffer progress bar status (0,1)
+sets the main progress bar status (0,1)
+
+##### `setBuffer(num)` 
+
+sets the buffer progress bar status (0,1)
+
+#### Type3:Indeterminate 
+
+Init Type Indeterminate :
+
+```js
+var intObj = {
+  template: 3, 
+  parent: '#customId' // this option will insert bar HTML into this parent Element 
+};
+var indeterminateProgress = new Mprogress(intObj);
+```
+
+Type Indeterminate just has `start` and `end` methods.
+
+```js
+indeterminateProgress.start();
+indeterminateProgress.end();
+```
+
+#### Type4:Query Indeterminate and Determinate 
+
+Init Type Query :
+
+```js
+var intObj = {
+  template: 4,
+  parent: '#anothercustomId' // in other position
+};
+var queryProgress = new Mprogress(intObj);
+```
+
+Type Query just has `start` and `end` methods.
+
+```js
+queryProgress.start();
+queryProgress.end();
+```
+
+## Configuration
+
+Passing an object(configuration) to instantiated Mprogress
+
+#### template
+
+#### parent
+
+#### start
+
+##### minimum
+
+##### easing
+
+## Browser Support
+
+
+
+## License
+
+[MIT](http://opensource.org/licenses/mit-license.php)  © [gctang](https://github.com/lightningtgc)
