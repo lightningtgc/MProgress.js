@@ -36,7 +36,7 @@ Or you can see all types together:
 
 #### Install it
 
-Including [mprogress.js] and [mprogress.css] into your target html file.
+Including `mprogress.js` and `mprogress.css` into your target html file.
 
 ```html
 <link rel='stylesheet' href='mprogress.css'/>
@@ -63,7 +63,7 @@ mprogress.start();
 Or you can just use `the following code` to replace step 1 and 2:
 
 ```js
-var mprogress = new Mprogress('start');
+var mprogress = new Mprogress('start');  //start it immediately
 ```
 
 3.Finish the loading and hide it :
@@ -76,13 +76,13 @@ mprogress.end();
 
 All types have `start` and `end` methods.
 
-#### Type1:Determinate
+#### Type1: Determinate
 
 `Determinate` also have `set` and `inc` methods.
 
 ##### set(n)
 
-sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
 
 eg:
 ```js
@@ -91,7 +91,7 @@ mprogress.set(0.3);
 
 ##### inc()
 
-increases by a random amount.
+Increases by a random amount.
 
 eg:
 ```js
@@ -100,7 +100,7 @@ mprogress.inc(0.3); // This will get the current status value and adds 0.3 until
 ```
 
 
-#### Type2:Buffer 
+#### Type2: Buffer 
 
 It always used for vedio loading,and you can using for other case.
 
@@ -124,7 +124,7 @@ If you want to start it immediately when instantiate it，you can use:
 ```js
 var bufferIntObj = {
   template: 2, // type number
-  start: true
+  start: true  // start it now
 };
 var bufferProgress = new Mprogress(bufferIntObj);
 ```
@@ -141,11 +141,15 @@ Type `Buffer` has two progress: main progress and buffer progress.
 
 ##### `set(n)` 
 
-sets the main progress bar status (0,1)
+Sets the main progress bar status (0,1)
 
 ##### `setBuffer(num)` 
 
-sets the buffer progress bar status (0,1)
+Sets the buffer progress bar status (0,1)
+
+##### inc()
+
+Increases by a random amount, including buffer bar.
 
 #### Type3:Indeterminate 
 
@@ -163,6 +167,7 @@ Type Indeterminate just has `start` and `end` methods.
 
 ```js
 indeterminateProgress.start();
+
 indeterminateProgress.end();
 ```
 
@@ -173,7 +178,7 @@ Init Type Query :
 ```js
 var intObj = {
   template: 4,
-  parent: '#anothercustomId' // in other position
+  parent: '#anothercustomId' // to other position
 };
 var queryProgress = new Mprogress(intObj);
 ```
@@ -182,6 +187,7 @@ Type Query just has `start` and `end` methods.
 
 ```js
 queryProgress.start();
+
 queryProgress.end();
 ```
 
@@ -189,18 +195,77 @@ queryProgress.end();
 
 Passing an object(configuration) to instantiated Mprogress
 
-#### template
+```js
+var mp = new Mprogress(configuration);
+```
 
-#### parent
+`template`
 
-#### start
+Set the progress bar type. (default: 1)
 
-##### minimum
+```js
+var mp = new Mprogress({
+  // vaule { 
+  //    1: Type Determinate,
+  //    2: Buffer,
+  //    3: Indeterminate, 
+  //    4: Query,
+  //  '<div>...</div>': 'yourcustomHTML'
+  // }
+  template: 2 
+});
+```
 
-##### easing
+`parent`
+
+Change the parent container where the bar show. (default: body)
+
+```js
+var mp = new Mprogress({
+  parent: '#customContainer' 
+});
+```
+
+`start`
+
+Start the bar immediately. (default: false)
+
+```js
+var mp = new Mprogress({
+  template: 4,
+  start: true
+});
+```
+
+For type1 Determinate, you can just use:
+
+```js
+var mp = new Mprogress('start');
+```
+
+## Advanced Configuration
+
+`trickle`
+
+`trickleRate`
+
+`trickleSpeed`
+
+`minimum`
+
+`easing`
+
+`positionUsing`
+
+`speed`
 
 ## Browser Support
 
+Mobile First.
+
+All types works in Chrome and Firefox.
+
+Type Determinate works in all browsers.
 
 
 ## License
