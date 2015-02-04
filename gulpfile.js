@@ -16,15 +16,12 @@ var paths = {
     srcBase: './src/js',
     destJS: devPath + '/js',
     destCSS: devPath + '/css'
-}
-
-
+};
 
 // clean
 gulp.task('clean', function(cb){
     del([devPath], cb);
 });
-
 
 // Handle CSS
 gulp.task('stylus', ['clean'], function(){
@@ -45,27 +42,22 @@ gulp.task('es6module', ['clean'], function(){
                .pipe(gulp.dest(paths.destJS))
                .pipe(gUglify())
                .pipe(gRename(jsMinName))
-               .pipe(gulp.dest(paths.destJS))
+               .pipe(gulp.dest(paths.destJS));
 });
 
-/* gulp.task('compress', function(){ */
-/*     return gulp.src('./mprogress.js') */
-/*     .pipe(gUglify()) */
-/*     .pipe(gulp.dest('./li')) */
-
-/* }); */
-
-/* gulp.watch(paths.srcCSS, ['stylus']); */
+// watch change
+gulp.task('watch', function(){
+    gulp.watch(paths.srcCSS, ['stylus']);
+});
 
 gulp.task('default', [ 'stylus', 'es6module']);
 
 gulp.task('bulid', ['stylus', 'es6module'], function(){
    return gulp.src(devPath + '/*/*')
-        .pipe(gulp.dest(bulidPath))
+        .pipe(gulp.dest(bulidPath));
 });
 
 gulp.task('publish', ['stylus', 'es6module'], function(){
    gulp.src([devPath + '/css/mprogress.css', devPath + '/js/mprogress.min.js'])
         .pipe(gulp.dest('./'));
-
 });
