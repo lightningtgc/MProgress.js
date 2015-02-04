@@ -1,37 +1,36 @@
+/**
+ * Helpers
+ */
+var Utils = {
+    extend: function(newObj, targetObj) {
+        targetObj = JSON.parse(JSON.stringify(targetObj));
+        if (typeof newObj === 'string') {
+            return targetObj;
+        }
+
+        var key, value;
+        for (var key in newObj) {
+            value = newObj[key];
+            if (newObj.hasOwnProperty(key) && value !== undefined) {
+                targetObj[key] = value;
+            }
+        }
+
+        return targetObj;
+    },
 
     /**
-     * Helpers
+     * Queues a function to be executed.
      */
-    var Utils = {
-        extend: function(newObj, targetObj) {
-            targetObj = JSON.parse(JSON.stringify(targetObj));
-            if (typeof newObj === 'string') {
-                return targetObj;
+
+    queue: (function() {
+        var pending = [];
+
+        function next() {
+            var fn = pending.shift();
+            if (fn) {
+                fn(next);
             }
-
-            var key, value;
-            for (var key in newObj) {
-                value = newObj[key];
-                if (newObj.hasOwnProperty(key) && value !== undefined) {
-                    targetObj[key] = value;
-                }
-            }
-
-            return targetObj;
-        },
-
-        /**
-         * (Internal) Queues a function to be executed.
-         */
-
-        queue: (function() {
-            var pending = [];
-
-            function next() {
-                var fn = pending.shift();
-                if (fn) {
-                    fn(next);
-                }
             }
 
             return function(fn) {
@@ -41,7 +40,7 @@
         })(),
 
         /**
-         * (Internal) Applies css properties to an element, similar to the jQuery 
+         * Applies css properties to an element, similar to the jQuery 
          * setcss method.
          *
          * While this helper does assist with vendor prefixed property names, it 
@@ -105,7 +104,7 @@
         },
 
         /**
-         * (Internal) converts a percentage (`0..1`) to a bar translateX
+         * converts a percentage (`0..1`) to a bar translateX
          * percentage (`-100%..0%`).
          */
         toBarPerc: function(n) {
@@ -157,15 +156,12 @@
         },
 
         /**
-         * (Internal) Removes an element from the DOM.
+         * Removes an element from the DOM.
          */
         removeElement: function(element) {
             element && element.parentNode && element.parentNode.removeChild(element);
         }
+};
 
-    };
-
-    
 export default Utils;
-   
 
