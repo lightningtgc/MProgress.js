@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>Mprogress.js</title>
+  <meta charset='utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" type="text/css" href='styles/css/demo.css' />
+  <link rel="stylesheet" type="text/css" href='../mprogress.css' />
+</head>
+<body>
+  <header class='page-header'>
+    <h1>Material Progress</h1>
+  </header>
+  <span id="forkongithub"><a target="_blank" href="https://github.com/lightningtgc/MProgress.js">Fork me on GitHub</a></span>
+  <div class='contents'>
+      <div class='demo-block intro'>
+          <h2>Intro <iframe src="http://ghbtns.com/github-btn.html?user=lightningtgc&repo=mprogress.js&type=watch&count=true"
+          allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></h2>
+          <p> Mprogress.js creates progress linear bar from Google Material Design.  </p> 
+          <p> By using CSS3 and pure js which don't depend on any other libraries.  </p>
+          <p> You can use 4 types of linear bar.  </p>
+    </div>
+    <div class='demo-block'>
+        <h3>Type1: Determinate</h3>
+        <img src="styles/images/determinate.gif" alt="determinate" />
+
+        <p>Source code:</p>
+        <p>
+            <div class="demo-code">
+                var mprogress = new Mprogress();
+            </div>
+        </p>
+        <div> ↓ ↓ ↓ ↓ ↓ ↓  Click these buttons  ↓  ↓  ↓  ↓ ↓ ↓ </div>
+        <span class='demo-button' id='demoDeStart'>start</span>
+        <span class='demo-button' id='demoDeEnd'>end</span>
+        <span class='demo-button' id='demoDeSet'>set</span>
+        <span class='demo-button' id='demoDeInc'>inc</span>
+        <p>
+        <span class="demo-code short">mprogress.start()</span> &mdash;
+            Start and show progress bar. 
+         </p>
+         <p>
+         <span class="demo-code short">mprogress.end()</span> &mdash;
+            Finish and hide bar.
+      </p>
+      <p>
+        <span class="demo-code short">mprogress.set(0.4)</span> &mdash;
+         Set a percentage.
+      </p>
+      <p>
+        <span class="demo-code short">mprogress.inc()</span> &mdash;
+        Increase by a little.
+      </p>
+    </div>
+    <div class="demo-block">
+        <h3>Type2: Buffer</h3>
+        <img src="styles/images/buffer.gif" alt="buffer" />
+
+        <p>Source code:</p>
+        <div class="demo-code">
+            var mprogress2 = new Mprogress({
+            <p class="indent">
+                template: 2,
+            </p>
+            <p class="indent">
+                parent: '#demoBuffer'
+            </p>
+            });
+        </div>
+        <span class="demo-button" id="demoBufferStart"> start </span>
+        <span class="demo-button" id="demoBufferEnd"> end </span>
+        <span class='demo-button' id='demoBufferSet'>set</span>
+        <span class='demo-button' id='demoBufferInc'>inc</span>
+        <span class='demo-button btn-big' id='demoBufferSetBuffer'>setBuffer</span>
+        <div id="demoBuffer" class="demo-bar"></div>
+    </div>
+    <div class="demo-block">
+        <h3>Type3: Indeterminate</h3>
+        <img src="styles/images/indeterminate.gif" alt="indeterminate" />
+
+        <p>Source code:</p>
+        <div class="demo-code">
+            var mprogress3 = new Mprogress({
+            <p class="indent">
+            template: 3,
+            </p>
+            <p class="indent">
+            parent: '#demoIn'
+            </p>
+            });
+        </div>
+        <span class="demo-button" id="demoInStart"> start </span>
+        <span class="demo-button" id="demoInEnd"> end </span>
+        <div id="demoIn" class="demo-bar"></div>
+    </div>     
+    <div class="demo-block">
+        <h3>Type4: Query Indeterminate and Determinate</h3>
+        <img src="styles/images/query.gif" alt="query" />
+
+        <p>Source code:</p>
+        <div class="demo-code">
+            var mprogress4 = new Mprogress({
+            <p class="indent">
+            template: 4,
+            </p>
+            <p class="indent">
+            parent: '#demoQuery'
+            </p>
+            });
+        </div>
+        <span class="demo-button" id="demoQueryStart"> start </span>
+        <span class="demo-button" id="demoQueryEnd"> end </span>
+        <div id="demoQuery" class="demo-bar"></div>
+    </div>
+    <div class="demo-block">
+        <h2>More details</h2>
+        <a target="_blank" href="https://github.com/lightningtgc/MProgress.js"> See more details on github!</a>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    
+  </div>
+  <script src='libs/zepto.min.js'></script>
+  <script src='../mprogress.min.js'></script>
+  <script src='js/demo.js'></script>
+</body>
+</html>
