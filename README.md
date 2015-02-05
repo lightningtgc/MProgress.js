@@ -3,7 +3,7 @@ MProgress.js
 
 Google Material Design Progress Linear bar.
 
-It using CSS3 and pure js which don't depend on any other libraries.
+It uses CSS3 and vanilla JavaScript which doesn't depend on any other libraries.
 
 ## Types and preview
 
@@ -36,7 +36,7 @@ Or you can see all types together:
 
 #### Install it
 
-Including `mprogress.js` and `mprogress.css` into your target html file.
+Include `mprogress.js` and `mprogress.css` in your target html file.
 
 ```html
 <link rel='stylesheet' href='mprogress.css'/>
@@ -78,7 +78,7 @@ All types have `start` and `end` methods.
 
 #### Type1: Determinate
 
-`Determinate` also have `set` and `inc` methods.
+`Determinate` also has `set` and `inc` methods.
 
 ##### set(n)
 
@@ -102,7 +102,7 @@ mprogress.inc(0.3); // This will get the current status value and adds 0.3 until
 
 #### Type2: Buffer 
 
-It always used for vedio loading,and you can using for other case.
+Its always used for video loading, and you can use for other case.
 
 Init Type Buffer :
 
@@ -119,7 +119,7 @@ var bufferProgress = new Mprogress(bufferIntObj);
 bufferProgress.start();
 ```
 
-If you want to start it immediately when instantiate it，you can use:
+If you want to start it immediately after instantiating it，you can use:
 
 ```js
 var bufferIntObj = {
@@ -135,7 +135,7 @@ var bufferProgress = new Mprogress(bufferIntObj);
 bufferProgress.end();
 ```
 
-`Buffer` also have `set` , `inc` and `setBuffer` methods
+`Buffer` also has `set` , `inc` and `setBuffer` methods
 
 Type `Buffer` has two progress: main progress and buffer progress.
 
@@ -218,7 +218,7 @@ var mp = new Mprogress({
 
 `parent`
 
-Change the parent container where the bar show. (default: body)
+Change the parent container where the bar is shown. (default: body)
 
 ```js
 var mp = new Mprogress({
@@ -263,7 +263,7 @@ var mp = new Mprogress('start');
 
 Mobile First.
 
-All types works in Chrome and Firefox.
+All types work in Chrome and Firefox.
 
 Type Determinate works in all browsers.
 
