@@ -22,7 +22,7 @@
         },
 
         /**
-         * (Internal) Queues a function to be executed.
+         * Queues a function to be executed.
          */
 
         queue: (function() {
@@ -33,139 +33,137 @@
                 if (fn) {
                     fn(next);
                 }
-            }
-
-            return function(fn) {
-                pending.push(fn);
-                if (pending.length == 1) next();
-            };
-        })(),
-
-        /**
-         * (Internal) Applies css properties to an element, similar to the jQuery 
-         * setcss method.
-         *
-         * While this helper does assist with vendor prefixed property names, it 
-         * does not perform any manipulation of values prior to setting styles.
-         */
-        setcss: (function() {
-            var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
-            cssProps    = {};
-
-            function camelCase(string) {
-                return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function(match, letter) {
-                    return letter.toUpperCase();
-                });
-            }
-
-            function getVendorProp(name) {
-                var style = document.body.style;
-                if (name in style) return name;
-
-                var i = cssPrefixes.length,
-                capName = name.charAt(0).toUpperCase() + name.slice(1),
-                vendorName;
-                while (i--) {
-                    vendorName = cssPrefixes[i] + capName;
-                    if (vendorName in style) return vendorName;
                 }
 
-                return name;
-            }
+                return function(fn) {
+                    pending.push(fn);
+                    if (pending.length == 1) next();
+                };
+            })(),
 
-            function getStyleProp(name) {
-                name = camelCase(name);
-                return cssProps[name] || (cssProps[name] = getVendorProp(name));
-            }
+            /**
+             * Applies css properties to an element, similar to the jQuery 
+             * setcss method.
+             *
+             * While this helper does assist with vendor prefixed property names, it 
+             * does not perform any manipulation of values prior to setting styles.
+             */
+            setcss: (function() {
+                var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
+                cssProps    = {};
 
-            function applyCss(element, prop, value) {
-                prop = getStyleProp(prop);
-                element.style[prop] = value;
-            }
+                function camelCase(string) {
+                    return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function(match, letter) {
+                        return letter.toUpperCase();
+                    });
+                }
 
-            return function(element, properties) {
-                var args = arguments,
-                prop, 
-                value;
+                function getVendorProp(name) {
+                    var style = document.body.style;
+                    if (name in style) return name;
 
-                if (args.length == 2) {
-                    for (prop in properties) {
-                        value = properties[prop];
-                        if (value !== undefined && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
+                    var i = cssPrefixes.length,
+                    capName = name.charAt(0).toUpperCase() + name.slice(1),
+                    vendorName;
+                    while (i--) {
+                        vendorName = cssPrefixes[i] + capName;
+                        if (vendorName in style) return vendorName;
                     }
-                } else {
-                    applyCss(element, args[1], args[2]);
+
+                    return name;
                 }
+
+                function getStyleProp(name) {
+                    name = camelCase(name);
+                    return cssProps[name] || (cssProps[name] = getVendorProp(name));
+                }
+
+                function applyCss(element, prop, value) {
+                    prop = getStyleProp(prop);
+                    element.style[prop] = value;
+                }
+
+                return function(element, properties) {
+                    var args = arguments,
+                    prop, 
+                    value;
+
+                    if (args.length == 2) {
+                        for (prop in properties) {
+                            value = properties[prop];
+                            if (value !== undefined && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
+                        }
+                    } else {
+                        applyCss(element, args[1], args[2]);
+                    }
+                }
+            })(),
+
+            clamp: function(n, min, max) {
+                if (n < min) return min;
+                if (n > max) return max;
+                return n;
+            },
+
+            /**
+             * converts a percentage (`0..1`) to a bar translateX
+             * percentage (`-100%..0%`).
+             */
+            toBarPerc: function(n) {
+                return (-1 + n) * 100;
+            },
+
+            hasClass: function(element, name) {
+                var list = typeof element == 'string' ? element : $$utils$$Utils.classList(element);
+                return list.indexOf(' ' + name + ' ') >= 0;
+            },
+
+            addClass: function(element, name) {
+                var oldList = $$utils$$Utils.classList(element),
+                newList = oldList + name;
+
+                if ($$utils$$Utils.hasClass(oldList, name)) return; 
+
+                // Trim the opening space.
+                element.className = newList.substring(1);
+            },
+
+            removeClass: function(element, name) {
+                var oldList = $$utils$$Utils.classList(element),
+                newList;
+
+                if (!$$utils$$Utils.hasClass(element, name)) return;
+
+                // Replace the class name.
+                newList = oldList.replace(' ' + name + ' ', ' ');
+
+                // Trim the opening and closing spaces.
+                element.className = newList.substring(1, newList.length - 1);
+            },
+
+            showEl: function(element) {
+                $$utils$$Utils.setcss(element, {
+                    display: 'block'
+                });
+            },
+
+            hideEl: function(element) {
+                $$utils$$Utils.setcss(element, {
+                    display: 'none'
+                });
+            },
+
+            classList: function(element) {
+                return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
+            },
+
+            /**
+             * Removes an element from the DOM.
+             */
+            removeElement: function(element) {
+                element && element.parentNode && element.parentNode.removeChild(element);
             }
-        })(),
-
-        clamp: function(n, min, max) {
-            if (n < min) return min;
-            if (n > max) return max;
-            return n;
-        },
-
-        /**
-         * (Internal) converts a percentage (`0..1`) to a bar translateX
-         * percentage (`-100%..0%`).
-         */
-        toBarPerc: function(n) {
-            return (-1 + n) * 100;
-        },
-
-        hasClass: function(element, name) {
-            var list = typeof element == 'string' ? element : $$utils$$Utils.classList(element);
-            return list.indexOf(' ' + name + ' ') >= 0;
-        },
-
-        addClass: function(element, name) {
-            var oldList = $$utils$$Utils.classList(element),
-            newList = oldList + name;
-
-            if ($$utils$$Utils.hasClass(oldList, name)) return; 
-
-            // Trim the opening space.
-            element.className = newList.substring(1);
-        },
-
-        removeClass: function(element, name) {
-            var oldList = $$utils$$Utils.classList(element),
-            newList;
-
-            if (!$$utils$$Utils.hasClass(element, name)) return;
-
-            // Replace the class name.
-            newList = oldList.replace(' ' + name + ' ', ' ');
-
-            // Trim the opening and closing spaces.
-            element.className = newList.substring(1, newList.length - 1);
-        },
-
-        showEl: function(element) {
-            $$utils$$Utils.setcss(element, {
-                display: 'block'
-            });
-        },
-
-        hideEl: function(element) {
-            $$utils$$Utils.setcss(element, {
-                display: 'none'
-            });
-        },
-
-        classList: function(element) {
-            return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
-        },
-
-        /**
-         * (Internal) Removes an element from the DOM.
-         */
-        removeElement: function(element) {
-            element && element.parentNode && element.parentNode.removeChild(element);
-        }
-
     };
-
 
     var $$utils$$default = $$utils$$Utils;
     (function(root, factory) {
@@ -694,7 +692,7 @@
         };
 
         /**
-         * Waits for all supplied jQuery or Zepto.js promises and
+         * Waits for all supplied jQuery or Zepto promises and
          * increases the progress as the promises resolve.
          * 
          * @param $promise jQuery or Zepto Promise

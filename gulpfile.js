@@ -8,7 +8,7 @@ var del = require('del');
 var jsName = 'mprogress.js';
 var jsMinName = 'mprogress.min.js';
 var devPath = './dev';
-var bulidPath = './bulid';
+var buildPath = './build';
 
 var paths = {
     srcCSS: './src/css/*.styl',
@@ -52,9 +52,9 @@ gulp.task('watch', function(){
 
 gulp.task('default', [ 'stylus', 'es6module']);
 
-gulp.task('bulid', ['stylus', 'es6module'], function(){
+gulp.task('build', ['stylus', 'es6module'], function(){
    return gulp.src(devPath + '/*/*')
-        .pipe(gulp.dest(bulidPath));
+        .pipe(gulp.dest(buildPath));
 });
 
 gulp.task('publish', ['stylus', 'es6module'], function(){
