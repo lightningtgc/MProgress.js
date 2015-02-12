@@ -36,12 +36,21 @@ Or you can see all types together:
 
 #### Install it
 
-Include `mprogress.js` and `mprogress.css` in your target html file.
+Include `mprogress.min.js` and `mprogress.min.css` in your target html file.
 
 ```html
-<link rel='stylesheet' href='mprogress.css'/>
+<link rel='stylesheet' href='mprogress.min.css'/>
 
-<script src='mprogress.js'></script>
+<script src='mprogress.min.js'></script>
+```
+
+You can also install it via [Bower](https://github.com/bower/bower) or [npm](https://www.npmjs.com/):
+
+```
+bower install --save mprogress
+```
+```
+npm install --save mprogress
 ```
 
 ## Basic usage
