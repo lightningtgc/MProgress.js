@@ -1,9 +1,15 @@
 {
   "name": "mprogress",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": [
     "mprogress.min.js",
     "mprogress.min.css"
+  ],
+  "scripts": [
+    "build/js/mprogress.js"
+  ],
+  "styles": [
+    "build/css/mprogress.css"
   ],
   "moduleType": [
     "globals"
