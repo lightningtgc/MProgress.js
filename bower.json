@@ -1,0 +1,30 @@
+{
+  "name": "mprogress",
+  "version": "0.1.0",
+  "main": [
+    "mprogress.min.js",
+    "mprogress.min.css"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "Material",
+    "design",
+    "linear",
+    "progress",
+    "bar"
+  ],
+  "authors": [
+    "gctang <lightningtgc@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "http://lightningtgc.github.io/MProgress.js/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
