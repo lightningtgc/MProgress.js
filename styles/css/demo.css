@@ -22,15 +22,18 @@ a {
     padding-left: 20px;
     color: #00BCD4;
 }
-.page-header h1 {
-    margin: 0;
+.page-header {
+    width: 100%;
     background-color: #00BCD4;
+}
+.page-header h1 {
+    max-width: 900px;
+    margin: 0 auto;
     padding: 1.8rem 0 1.8rem 2rem;
     color: #FFF;
     font-size: 3rem;
     font-weight: 300;
     line-height: 1.5;
-
 }
 .contents {
     margin: 0 auto;
