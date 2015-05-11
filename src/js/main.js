@@ -156,6 +156,11 @@ import Utils from './utils';
          * If `true` is passed, it will show the progress bar even if its hidden.
          *
          *     MProgress.end(true);
+         * 
+         * Passing `true` for `instanteRemove` removes the progress loader without waiting for any delays
+         * 
+         *     MProgress.end(null, true);
+         * 
          */
         end: function(force, instantRemove) {
             if (!force && !this.status) return this;
