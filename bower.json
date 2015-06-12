@@ -1,6 +1,5 @@
 {
   "name": "mprogress",
-  "version": "0.1.1",
   "main": [
     "mprogress.min.js",
     "mprogress.min.css"
