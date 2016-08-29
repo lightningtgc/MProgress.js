@@ -492,6 +492,9 @@
                 var progress = this._getRenderedId(),
                 MParent   = document.querySelector(this.options.parent);
 
+                // stop this proccess if the progress was allready removed
+                if (!MParent) return;
+
                 if (MParent != document.body) {
                     $$utils$$default.removeClass(MParent, 'mprogress-custom-parent');
                 }
