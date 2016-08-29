@@ -439,6 +439,9 @@ import Utils from './utils';
             var tplType = this._getCurrTplId();
             var idName = 'mprogress' + tplType;
 
+            var parentFiltered = this.options.parent.match(/([a-zA-Z0-9]+)/ig).join("-");
+            var idName = [ parentFiltered, 'mprogress', tplType ].join("-");
+
             if(!getId){
                 return document.getElementById(idName);
             } else {
