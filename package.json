@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "mprogress",
   "description": "Mprogress.js creates progress linear bar from Google Material Design.",
   "version": "0.1.1",
@@ -16,5 +16,6 @@
     "gulp-es6-module-transpiler": "^0.2.1",
     "gulp-stylus": "^2.0.0",
     "gulp-minify-css": "^0.4.5"
-  }
+  },
+  "license": "MIT"
 }
