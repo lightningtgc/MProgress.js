@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/lightningtgc/MProgress.js.git"
-  },  
+  },
   "devDependencies": {
     "gulp": "^3.8.10",
     "del": "^1.1.1",
