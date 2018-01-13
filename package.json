@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git://github.com/lightningtgc/MProgress.js.git"
   },
+  "main": "./mprogress.min.js",
+  "jsnext:main": "./src/js/main.js",
+  "style": "./mprogress.min.css",
   "devDependencies": {
     "gulp": "^3.8.10",
     "del": "^1.1.1",
