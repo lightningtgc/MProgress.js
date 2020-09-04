@@ -328,7 +328,7 @@ import Utils from './utils';
             var progress = this._getRenderedId(),
             MParent   = document.querySelector(this.options.parent);
 
-            // stop this process if the progress was allready removed
+            // stop this process if the progress was already removed
             if (!MParent) return;
 
             if (MParent != document.body) {
