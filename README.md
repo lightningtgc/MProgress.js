@@ -1,6 +1,11 @@
 MProgress.js
 ============
 
+Update:
+
+Add support for multiple instances
+
+
 Google Material Design Progress Linear bar.
 
 It uses CSS3 and vanilla JavaScript which doesn't depend on any other libraries.
