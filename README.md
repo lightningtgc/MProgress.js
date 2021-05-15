@@ -1,10 +1,11 @@
 MProgress.js
 ============
 
-Update:
+## Update:
 
-Add support for multiple instances
+*Add support for multiple instances*
 
+------------------------
 
 Google Material Design Progress Linear bar.
 
