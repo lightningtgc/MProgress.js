@@ -436,8 +436,8 @@ import Utils from './utils';
 
         _getRenderedId: function(getId) {
 
-            var tplType = this._getCurrTplId();
-            var idName = 'mprogress' + tplType;
+            // var tplType = this._getCurrTplId();
+            var idName = this.options.parent + this.options.template;
 
             var parentFiltered = this.options.parent.match(/([a-zA-Z0-9]+)/ig).join("-");
             var idName = [ parentFiltered, 'mprogress', tplType ].join("-");
